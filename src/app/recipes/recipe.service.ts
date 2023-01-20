@@ -2,12 +2,13 @@ import { EventEmitter, Injectable } from "@angular/core";
 import { Ingredient } from "../shared/ingredient.model";
 import { ShoppingListService } from "../shopping-list/shopping-list.service";
 import { Recipe } from "./recipe.model";
+import { Subject } from "rxjs";
 
 @Injectable()
 export class RecipeService{
     constructor(private slSer :ShoppingListService){};
 
-    recipeSelected = new EventEmitter<Recipe>();
+    recipeSelected = new Subject<Recipe>();
     private recipes: Recipe[] = [
         new Recipe('Pizza', 'Italian', 'http://surl.li/ekhwa',
         [new Ingredient('Pizza Base',1),new Ingredient('Sauces',1),new Ingredient('Herbs',1)]),
@@ -20,6 +21,11 @@ export class RecipeService{
     getRecipe(){
         //return other array
         return this.recipes.slice();
+    }
+
+    getSingleRecipe(index:number){
+        //return other array
+        return this.recipes.slice()[index];
     }
     addRecipe(recipe:Recipe){
 
