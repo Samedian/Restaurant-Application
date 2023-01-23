@@ -9,6 +9,7 @@ export class RecipeService{
     constructor(private slSer :ShoppingListService){};
 
     recipeSelected = new Subject<Recipe>();
+    recipeChanged = new Subject<Recipe[]>();
     private recipes: Recipe[] = [
         new Recipe('Pizza', 'Italian', 'http://surl.li/ekhwa',
         [new Ingredient('Pizza Base',1),new Ingredient('Sauces',1),new Ingredient('Herbs',1)]),
@@ -30,9 +31,23 @@ export class RecipeService{
     addRecipe(recipe:Recipe){
 
         this.recipes.push(recipe);
+        this.recipeChanged.next(this.recipes.slice());
+
     }
 
     addIngredientToShoppingList(ing:Ingredient[]){
        this.slSer.addIngredients(ing);
+    }
+
+
+    updateRecipe(index:number, recipe:Recipe){
+        this.recipes[index]= recipe
+        this.recipeChanged.next(this.recipes.slice());
+    }
+
+    deleteRecipe(index:number){
+        this.recipes.splice(index,1);
+        this.recipeChanged.next(this.recipes.slice());
+
     }
 }
