@@ -10,15 +10,16 @@ export class RecipeService{
 
     recipeSelected = new Subject<Recipe>();
     recipeChanged = new Subject<Recipe[]>();
-    private recipes: Recipe[] = [
-        new Recipe('Pizza', 'Italian', 'http://surl.li/ekhwa',
-        [new Ingredient('Pizza Base',1),new Ingredient('Sauces',1),new Ingredient('Herbs',1)]),
-        new Recipe('Dosa', 'South Indian', 'http://surl.li/ekhwa',[
-            new Ingredient('batter',1),
-            new Ingredient('Paste',1)
-        ])
+    // private recipes: Recipe[] = [
+    //     new Recipe('Pizza', 'Italian', 'http://surl.li/ekhwa',
+    //     [new Ingredient('Pizza Base',1),new Ingredient('Sauces',1),new Ingredient('Herbs',1)]),
+    //     new Recipe('Dosa', 'South Indian', 'http://surl.li/ekhwa',[
+    //         new Ingredient('batter',1),
+    //         new Ingredient('Paste',1)
+    //     ])
 
-    ];
+    // ];
+    recipes : Recipe[]=[];
     getRecipe(){
         //return other array
         return this.recipes.slice();
@@ -49,5 +50,10 @@ export class RecipeService{
         this.recipes.splice(index,1);
         this.recipeChanged.next(this.recipes.slice());
 
+    }
+
+    setRecipe(_recipes:Recipe[]){
+        this.recipes = _recipes
+        this.recipeChanged.next(this.recipes.slice())
     }
 }
