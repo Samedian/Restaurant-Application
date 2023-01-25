@@ -1,7 +1,9 @@
-import { Component } from "@angular/core";
+import { Component, ComponentFactoryResolver, ViewChild } from "@angular/core";
 import { NgForm } from "@angular/forms";
 import { Router } from "@angular/router";
-import { Observable } from "rxjs";
+import { Observable, Subscription } from "rxjs";
+import { AlertComponent } from "../shared/alert/alert.component";
+import { PlaceholderDirective } from "../shared/placeholder/placeholder.directive";
 import { AuthResponseData, AuthService } from "./auth.service";
 
 @Component({
@@ -15,8 +17,10 @@ export class AuthComponent {
     isLoading = false;
     error =null;
     authObs : Observable<AuthResponseData>;
+    @ViewChild(PlaceholderDirective) alertHost : PlaceholderDirective;
 
-    constructor(private auth: AuthService, private router : Router) { }
+    constructor(private auth: AuthService, private router : Router,
+        private componentFactoryResolver : ComponentFactoryResolver) { }
     onSwitchMode() {
         this.isLoginMode = !this.isLoginMode;
     }
@@ -44,6 +48,7 @@ export class AuthComponent {
 
             }, errorMessage => {
                 console.log(errorMessage);
+                this.showErrorAlert(errorMessage);
                 this.error = errorMessage;
                 this.isLoading = false;
 
@@ -53,5 +58,28 @@ export class AuthComponent {
 
         form.reset();
 
+    }
+
+    onHandleError(){
+        this.error=null;
+    }
+
+    private Sub : Subscription;
+    private showErrorAlert(message:string){
+        const alertComponentFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
+
+        //create place
+        const hostViewContainerRef = this.alertHost.viewConRef;
+        //clear before data
+        hostViewContainerRef.clear();
+
+        const compRef = hostViewContainerRef.createComponent(alertComponentFactory);
+        compRef.instance.message= message;
+        this.Sub = compRef.instance.close.subscribe(
+            res =>{
+                this.Sub.unsubscribe();
+                hostViewContainerRef.clear();
+            }
+        ) 
     }
 }
