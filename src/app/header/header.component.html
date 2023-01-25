@@ -7,11 +7,13 @@
             <ul class="nav navbar-nav">
                 <!-- <li><a href="#" (click)="onSelect('recipe')">Recipes</a> </li>
                 <li><a href="#" (click)="onSelect('shopping-list')">Shopping List</a> </li> -->
-                <li routerLinkActive="active"><a routerLink="/recipes">Recipes</a> </li>
+                <li routerLinkActive="active" *ngIf="isAuthenticated"><a routerLink="/recipes">Recipes</a> </li>
+                <li routerLinkActive="active" *ngIf="!isAuthenticated"><a routerLink="/auth">Authenticate</a> </li>
                 <li routerLinkActive="active"><a routerLink="/shopping-list">Shopping List</a> </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
-                <li class="dropdown" appDropdown>
+                <li><a style="cursor: pointer;" *ngIf="isAuthenticated" (click)="onLogOut()">Logout</a></li>
+                <li class="dropdown" appDropdown *ngIf="isAuthenticated">
                     <a class="dropdown-toggle" role="button">Manage <span class="caret"></span></a>
                     <ul class="dropdown-menu">
                         <li><a style="cursor: pointer;" (click)="save()">Save Data</a></li>
